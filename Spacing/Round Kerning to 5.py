@@ -21,12 +21,16 @@ for eachFontMaster in font.masters:
 	eachFontMasterId = eachFontMaster.id
 	to_be_removed = []
 
-	for first, seconds in dict( font.kerning[eachFontMasterId] ).items():
-		if not first.startswith('@'):
-			first = font.glyphForId_( first ).name
+	for first, seconds in dict(font.kerning[eachFontMasterId]).items():
+        if isinstance(first, str) and first.startswith('@'):
+            firstName = first
+        else:
+            firstName = font.glyphForId_(first).name
 		for second in seconds:
-			if not second.startswith('@'):
-				second = font.glyphForId_( second ).name
+			if isinstance(second, str) and second.startswith('@'):
+                secondName = second
+            else:
+                secondName = font.glyphForId_(second).name
 			# round towards 5
 			existingValue = font.kerningForPair( eachFontMasterId, first, second )
 			value = myround( existingValue, 5)
@@ -40,4 +44,4 @@ for eachFontMaster in font.masters:
 		font.removeKerningForPair( eachFontMasterId, first, second )
 		printString += "0\t%s: %s, %s, %s\n" % (eachFontMaster.name, first, second, existingValue) 
 
-print printString
+print (printString)
